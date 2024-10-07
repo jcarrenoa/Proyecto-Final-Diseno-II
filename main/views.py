@@ -11,5 +11,4 @@ def main_view(request):
 def detalles_view(request, id):
     persona = Persona.objects.get(id=id)
     etimologia = bot.get_response(persona.primer_nombre)
-    print(etimologia)
     return render(request, 'detalles.html', {'persona': persona, 'etimologia': etimologia})
