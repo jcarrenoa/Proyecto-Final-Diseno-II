@@ -25,6 +25,8 @@
     width: 75px;
     height: 75px;
     object-fit: cover; /* Asegura que la imagen se ajuste a su contenedor sin deformarse */
+    border-radius: 50%;
+    margin-bottom: 15px;
 }
 
 .container {

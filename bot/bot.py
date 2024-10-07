@@ -14,7 +14,7 @@ class Bot:
     def get_response(self, message):
         message_f = self.__messages_context + [{"role": "user", "content": message}]
         completion = self.__client.chat.completions.create(
-            model="gpt-3.5-turbo",
+            model="gpt-4o",
             messages=message_f,
             temperature=0,
             max_tokens=1000,
