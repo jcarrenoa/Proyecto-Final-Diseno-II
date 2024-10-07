@@ -1,0 +1,52 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formulario de Registro</title>
+    <link rel="preload" href="{% static '/styles/styles_auth.css' %}" as="style">
+    <link rel="stylesheet" href="{% static '/styles/styles_auth.css' %}">
+    <link rel="preload" href="{% static '/styles/styles_common.css' %}" as="style">
+    <link rel="stylesheet" href="{% static '/styles/styles_common.css' %}">
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="logo">Mi Empresa</div>
+        {% if user.is_authenticated %}
+            <div class="nav-links">
+                <a href="{% url 'register' %}">Registrar</a>
+                <a href="{% url 'exit' %}">Cerrar Sesión</a>
+            </div>
+        {% else %}
+        {% endif %}
+    </header>
+
+    <!-- Main -->
+    <div class="form-container">.
+        {% if user.is_authenticated %}
+            <h1 class="title">¡Bienvenido, {{ user.username }}!</h1>
+            <p>Has iniciado sesión correctamente.</p>
+        {% else %}
+            <h1 class="title">Iniciar Sesión</h1>
+            <form method="post" action="{% url 'login' %}">
+                {% csrf_token %}
+                <div class="form-group full-width">
+                    <label for="username">Nombre de Usuario:<span class="required">*</span></label>
+                    <input type="text" id="username" name="username" required>
+                </div>
+                <div class="form-group full-width">
+                    <label for="password">Contraseña:<span class="required">*</span></label>
+                    <input type="password" id="password" name="password" required>
+                </div>
+                <input type="submit" value="Iniciar sesion" id="submit">
+            </form>
+        {% endif %}
+    </div>
+    <footer>
+        © 2024 Mi Empresa - Todos los derechos reservados
+    </footer>
+</body>
+</html>

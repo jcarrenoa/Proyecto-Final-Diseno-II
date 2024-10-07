@@ -1,0 +1,36 @@
+{% extends 'base_main.html' %}
+{% block content %}
+{% load static %}
+
+    <!-- Main -->
+    <main>
+        <div class="form-container">
+        <h1 class="title">Personas Registradas</h1>
+        <hr>
+        {% for persona in personas %}
+            <div class="card">
+                <div class="card-header">
+                    <a href="{% url 'detalles' persona.id %}">
+                        <p><strong>{{ persona.primer_nombre }} {{ persona.apellidos }}</strong><p>
+                    </a>
+                </div>
+                <div class="card-body">
+                    <p><strong>Documento:</strong> {{ persona.tipo_documento }} {{ persona.nro_documento }}</p>
+                    <p><strong>Fecha de Nacimiento:</strong> {{ persona.fecha_nacimiento }}</p>
+                </div>
+                <div class="profile-picture">
+                    <a href="{% url 'detalles' persona.id %}">
+                        <img src="{{ persona.foto_identificacion.url }}" alt="Foto de perfil">
+                    </a>
+                </div>
+            </div>
+            <hr>
+        {% empty %}
+            <p>No hay personas registradas.</p>
+        {% endfor %}
+        
+        </div>
+    </main>
+
+
+{% endblock %}

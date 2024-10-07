@@ -1,0 +1,87 @@
+.form-container {
+    background-color: #FFFFFF;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    width: 900px;
+    margin: 80px auto 80px auto;
+}
+
+.card {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.card-content {
+    flex: 1; /* Esto permite que el contenido ocupe todo el espacio posible */
+}
+
+.profile-picture {
+    padding-left: 20px;
+}
+
+.profile-picture img {
+    width: 75px;
+    height: 75px;
+    object-fit: cover; /* Asegura que la imagen se ajuste a su contenedor sin deformarse */
+}
+
+.container {
+    padding: 20px;
+}
+
+.title {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.content {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+}
+
+.left-column {
+    flex: 2;
+}
+
+.right-column {
+    flex: 1;
+    text-align: center;
+}
+
+.right-column img {
+    width: 150px;
+    height: 150px;
+    object-fit: cover;
+    border-radius: 50%;
+    margin-bottom: 15px;
+}
+
+.details {
+    margin-top: 10px;
+}
+
+.details p {
+    margin: 5px 0;
+}
+
+.etymology {
+    margin-top: 20px;
+    padding: 15px;
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
+
+.etymology h4 {
+    margin-bottom: 10px;
+    text-align: center;
+}
+
+.etymology p {
+    font-size: 14px;
+    line-height: 1.6;
+    color: #555;
+}

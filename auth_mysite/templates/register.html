@@ -1,0 +1,115 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formulario de Registro</title>
+    <link rel="preload" href="{% static '/styles/styles_auth.css' %}" as="style">
+    <link rel="stylesheet" href="{% static '/styles/styles_auth.css' %}">
+    <link rel="preload" href="{% static '/styles/styles_common.css' %}" as="style">
+    <link rel="stylesheet" href="{% static '/styles/styles_common.css' %}">
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="logo">Mi Empresa</div>
+        <div class="nav-links">
+            <a href="{% url 'main_view' %}">Volver</a>
+            <a href="{% url 'exit' %}">Cerrar Sesión</a>
+        </div>
+    </header>
+
+    <!-- Main -->
+    <div class="form-container">
+        <h1 class="title">Agregar Persona</h1>
+        
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="primer-nombre">Primer Nombre<span class="required">*</span>:</label>
+                    {{ form.primer_nombre }}
+                </div>
+
+                <div class="form-group">
+                    <label for="segundo-nombre">Segundo Nombre:</label>
+                    {{ form.segundo_nombre }}
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="apellidos">Apellidos<span class="required">*</span>:</label>
+                    {{ form.apellidos }}
+                </div>
+
+                <div class="form-group">
+                    <label for="tipo-doc">Tipo de documento<span class="required">*</span>:</label>
+                    {{ form.tipo_documento }}
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group full-width">
+                    <label for="nro-doc">Nro. Documento<span class="required">*</span>:</label>
+                    {{ form.nro_documento }}
+                </div>
+            </div>
+
+            <!-- Línea divisoria -->
+            <hr>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="fecha-nacimiento">Fecha de Nacimiento<span class="required">*</span>:</label>
+                    {{ form.fecha_nacimiento }}
+                </div>
+
+                <div class="form-group">
+                    <label for="genero">Género<span class="required">*</span>:</label>
+                    {{ form.genero }}
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="correo">Correo Electrónico<span class="required">*</span>:</label>
+                    {{ form.correo }}
+                </div>
+
+                <div class="form-group">
+                    <label for="celular">Celular<span class="required">*</span>:</label>
+                    {{ form.celular }}
+                </div>
+            </div>
+
+            <div class="form-group full-width">
+                <label for="foto">Foto para Identificación:</label>
+                {{ form.foto_identificacion }}
+            </div>
+                {% if form.errors %}
+                <div class="error-message">
+                    <ul>
+                    {% for field, errors in form.errors.items %}
+                        <li>{{ field }}: {{ errors }}</li>
+                    {% endfor %}
+                    </ul>
+                </div>
+                {% endif %}
+            <input type="submit" value="Registrar" id="submit">
+        </form>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        © 2024 Mi Empresa - Todos los derechos reservados
+    </footer>
+</body>
+</html>
+
+
+
+
