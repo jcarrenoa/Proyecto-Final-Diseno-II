@@ -1,25 +1,13 @@
-{% load static %}
+{% extends 'base_auth.html' %}
 
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Formulario de Registro</title>
-    <link rel="preload" href="{% static '/styles/styles_auth.css' %}" as="style">
-    <link rel="stylesheet" href="{% static '/styles/styles_auth.css' %}">
-    <link rel="preload" href="{% static '/styles/styles_common.css' %}" as="style">
-    <link rel="stylesheet" href="{% static '/styles/styles_common.css' %}">
-</head>
-<body>
-    <!-- Header -->
-    <header>
-        <div class="logo">Mi Empresa</div>
-        <div class="nav-links">
-            <a href="{% url 'main_view' %}">Volver</a>
-            <a href="{% url 'exit' %}">Cerrar Sesión</a>
-        </div>
-    </header>
+{% block header_registro %}
+    <div class="nav-links">
+        <a href="{% url 'main_view' %}">Volver</a>
+        <a href="{% url 'exit' %}">Cerrar Sesión</a>
+    </div>
+{% endblock %}
+
+{% block content %}
 
     <!-- Main -->
     <div class="form-container">
@@ -103,12 +91,7 @@
         </form>
     </div>
 
-    <!-- Footer -->
-    <footer>
-        © 2024 Mi Empresa - Todos los derechos reservados
-    </footer>
-</body>
-</html>
+{% endblock %}
 
 
 
