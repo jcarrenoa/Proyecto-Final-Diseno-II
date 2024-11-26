@@ -12,10 +12,11 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 
 from pathlib import Path
 import os
+from dotenv import load_dotenv
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-
+load_dotenv()
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
@@ -79,15 +80,12 @@ WSGI_APPLICATION = 'mysite.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': "mssql",
-        'NAME': 'pfddatabase',
-        'USER': 'sa',
-        'PASSWORD': '123456',
-        'HOST': 'localhost',
-        'PORT': '',
-        'OPTIONS': {
-            'driver': 'ODBC Driver 17 for SQL Server',
-        }
+        'ENGINE': 'django.db.backends.mysql',  # Motor MySQL
+        'NAME': os.getenv('DB_NAME'),  # Nombre de la base de datos
+        'USER': os.getenv('DB_USER'),  # Usuario de la base de datos
+        'PASSWORD': os.getenv('DB_PASSWORD'),  # Contraseña de la base de datos
+        'HOST': os.getenv('DB_HOST'),  # Host de la base de datos
+        'PORT': os.getenv('DB_PORT'),  # Puerto de la base de datos
     }
 }
 

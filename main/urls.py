@@ -18,8 +18,12 @@ Including another URLconf
 from django.urls import path
 from django.contrib.auth.decorators import login_required
 from . import views
+from .views import LogListView
 
 urlpatterns = [
+    path('register/', views.register, name='register'),
     path('', login_required(views.main_view), name='main_view'),
-    path('detalles/<int:id>/', views.detalles_view, name='detalles')
+    path('detalles/<int:id>/', views.detalles_view, name='detalles'),
+    path('exit/', views.exit, name='exit'),
+    path('logs/', login_required(LogListView.as_view()), name='log_list')
 ]

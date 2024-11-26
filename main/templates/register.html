@@ -2,7 +2,9 @@
 
 {% block header_registro %}
     <div class="nav-links">
-        <a href="{% url 'main_view' %}">Volver</a>
+        <a href="{% url 'main_view' %}">Inicio</a>
+        <a href="{% url 'log_list' %}">Logs</a>
+        <a href="{% url 'register' %}">Registrar</a>
         <a href="{% url 'exit' %}">Cerrar Sesión</a>
     </div>
 {% endblock %}

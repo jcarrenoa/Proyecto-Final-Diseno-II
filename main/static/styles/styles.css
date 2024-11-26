@@ -87,3 +87,130 @@
     line-height: 1.6;
     color: #555;
 }
+
+
+
+
+
+/* Título */
+.title_log {
+    font-size: 2rem;
+    color: #333;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+/* Barra de búsqueda */
+.search-form {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+}
+
+.search-input {
+    width: 70%;
+    padding: 10px;
+    font-size: 1rem;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    outline: none;
+    transition: border-color 0.3s ease;
+}
+
+.search-input:focus {
+    border-color: #007bff;
+}
+
+.search-button {
+    padding: 10px 15px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: background-color 0.3s ease;
+}
+
+.search-button:hover {
+    background-color: #0056b3;
+}
+
+/* Tabla de logs */
+.logs-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+    font-size: 0.9rem;
+    background-color: white;
+}
+
+.logs-table th,
+.logs-table td {
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+.logs-table th {
+    background-color: #f2f2f2;
+    font-weight: bold;
+}
+
+.logs-table tr:hover {
+    background-color: #f9f9f9;
+}
+
+/* Mensaje en caso de no encontrar logs */
+.no-logs-message {
+    text-align: center;
+    padding: 20px;
+    color: #888;
+}
+
+/* Paginación */
+/* Paginación */
+.pagination-nav {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.pagination-nav ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+.pagination-nav li {
+    display: inline-block;
+    margin: 0 5px;
+}
+
+.pagination-nav a.pagination-link {
+    padding: 8px 12px;
+    background-color: #f2f2f2;
+    color: #007bff;
+    text-decoration: none;
+    border-radius: 4px;
+    font-size: 0.9rem;
+    transition: background-color 0.3s ease;
+}
+
+.pagination-nav a.pagination-link:hover {
+    background-color: #007bff;
+    color: white;
+}
+
+.pagination-nav .pagination-text {
+    font-size: 0.9rem;
+    padding: 8px 12px;
+    background-color: #f2f2f2;
+    color: #333;
+    border-radius: 4px;
+}
+
+/* Estilos de paginación cuando no hay siguiente o anterior */
+.pagination-nav a[disabled] {
+    background-color: #ddd;
+    color: #aaa;
+    cursor: not-allowed;
+}

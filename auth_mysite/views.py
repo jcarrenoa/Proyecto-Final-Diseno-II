@@ -1,5 +1,4 @@
 from django.shortcuts import render
-from .forms import PersonaForm
 from django.shortcuts import redirect
 from django.contrib import messages
 from django.contrib.auth.models import User
@@ -24,18 +23,3 @@ def login(request):
             messages.error(request, 'Usuario o contraseña incorrectos')
     
     return render(request, 'login.html')
-
-@login_required
-def register(request):
-    if request.method == 'POST':
-        form = PersonaForm(request.POST, request.FILES)
-        if form.is_valid():
-            form.save()  # Guarda el registro en la base de datos
-            return render(request, 'register.html')  # Redirige a una vista de lista o a otra página después de guardar
-    else:
-        form = PersonaForm()
-    return render(request, 'register.html', {'form': form})
-
-def exit(request):
-    logout(request)
-    return redirect('/')

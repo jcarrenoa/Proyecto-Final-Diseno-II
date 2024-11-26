@@ -1,0 +1,71 @@
+{% extends "base_main.html" %}
+
+{% block content %}
+<div class="form-container">
+    <h1 class="title_log">Logs</h1>
+
+    <!-- Barra de búsqueda -->
+    <form method="get" action="{% url 'log_list' %}" class="search-form">
+        <input type="text" name="q" class="search-input" placeholder="Buscar por documento" value="{{ request.GET.q }}">
+        <button type="submit" class="search-button">Buscar</button>
+    </form>
+
+    <!-- Tabla de logs -->
+    <table class="logs-table">
+        <thead>
+            <tr>
+                <th>Documento</th>
+                <th>Acción</th>
+                <th>Fecha y hora</th>
+                <th>Descripción</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for log in logs %}
+                <tr>
+                    <td>{{ log.documento }}</td>
+                    <td>{{ log.get_tipo_display }}</td>
+                    <td>{{ log.fecha }}</td>
+                    <td>{{ log.descripcion }}</td>
+                </tr>
+            {% empty %}
+                <tr>
+                    <td colspan="4" class="no-logs-message">No se encontraron logs.</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <!-- Paginación -->
+    <nav class="pagination-nav" aria-label="Page navigation">
+        <ul>
+            {% if logs.has_previous %}
+                <li>
+                    <a href="?q={{ request.GET.q }}&page=1" class="pagination-link">Primera</a>
+                </li>
+                <li>
+                    <a href="?q={{ request.GET.q }}&page={{ logs.previous_page_number }}" class="pagination-link">Anterior</a>
+                </li>
+            {% endif %}
+            
+            <li>
+                <span class="pagination-text">Página {{ logs.number }} de {{ logs.paginator.num_pages }}</span>
+            </li>
+
+            {% if logs.has_next %}
+                <li>
+                    <a href="?q={{ request.GET.q }}&page={{ logs.next_page_number }}" class="pagination-link">Siguiente</a>
+                </li>
+                <li>
+                    <a href="?q={{ request.GET.q }}&page={{ logs.paginator.num_pages }}" class="pagination-link">Última</a>
+                </li>
+            {% endif %}
+        </ul>
+    </nav>
+    {% if logs %}
+        <p>Página actual: {{ logs.has_next }}</p>
+    {% else %}
+        <p>No hay logs disponibles.</p>
+    {% endif %}
+</div>
+{% endblock %}

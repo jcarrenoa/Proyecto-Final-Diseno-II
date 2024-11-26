@@ -1,5 +1,5 @@
 from django import forms
-from .models import Persona
+from auth_mysite.models import Persona
 import re
 
 class PersonaForm(forms.ModelForm):
@@ -52,7 +52,7 @@ class PersonaForm(forms.ModelForm):
     
     def clean_foto_identificacion(self):
         foto = self.cleaned_data.get('foto_identificacion')
-        if foto:
+        if foto and type(foto) != str:
             max_size_mb = 10  # Tamaño máximo en MB (10 MB)
             if foto.size > max_size_mb * 1024 * 1024:  # Convertir MB a bytes
                 raise forms.ValidationError(f'La foto no debe exceder {max_size_mb} MB.')
