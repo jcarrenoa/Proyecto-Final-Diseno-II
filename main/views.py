@@ -12,8 +12,10 @@ import requests
 bot = Bot()
 
 def main_view(request):
-    personas = Persona.objects.all()
-    return render(request, 'main.html', {'personas': personas})
+    response = requests.get(f'http://localhost:5000/persona')
+    if response.status_code == 200:
+        personas = response.json()
+        return render(request, 'main.html', {'personas': personas})
 
 @login_required
 def detalles_view(request, id):

@@ -20,7 +20,7 @@
                 </div>
                 <div class="profile-picture">
                     <a href="{% url 'detalles' persona.id %}">
-                        <img src="{{ persona.foto_identificacion.url }}" alt="Foto de perfil">
+                        <img src="/media/{{ persona.foto_identificacion }}" alt="Foto de perfil">
                     </a>
                 </div>
             </div>
