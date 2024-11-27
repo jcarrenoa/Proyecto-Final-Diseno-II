@@ -49,22 +49,30 @@ def get_logs():
 
     return jsonify(logs)
 
+@app.route('/persona', defaults={'id': None}, methods=['GET'])
 @app.route('/persona/<int:id>', methods=['GET'])
 def get_persona(id):
     connection = get_db_connection()
     cursor = connection.cursor(dictionary=True)
     
-    # Consulta para obtener la persona por id
-    cursor.execute("SELECT * FROM auth_mysite_persona WHERE id = %s", (id,))
-    persona = cursor.fetchone()  # Obtener un solo resultado
-
-    cursor.close()
-    connection.close()
-
-    if persona:
-        return jsonify(persona)
+    if id is None:
+        # Consulta para obtener todas las personas
+        cursor.execute("SELECT * FROM auth_mysite_persona")
+        personas = cursor.fetchall()  # Obtener todos los resultados
+        cursor.close()
+        connection.close()
+        return jsonify(personas)
     else:
-        return jsonify({'message': 'Persona no encontrada'}), 404
+        # Consulta para obtener una persona específica por id
+        cursor.execute("SELECT * FROM auth_mysite_persona WHERE id = %s", (id,))
+        persona = cursor.fetchone()  # Obtener un solo resultado
+        cursor.close()
+        connection.close()
+
+        if persona:
+            return jsonify(persona)
+        else:
+            return jsonify({'message': 'Persona no encontrada'}), 404
 
 if __name__ == '__main__':
     app.run(debug=True)
