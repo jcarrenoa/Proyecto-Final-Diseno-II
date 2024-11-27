@@ -14,5 +14,22 @@ services:
     volumes:
       - mysql_data:/var/lib/mysql
 
+  # Servicio del microservicio de consultas
+  consultas:
+    build:
+      context: ./flask_consulta  # Ruta donde está tu Dockerfile
+    container_name: consultas_service
+    ports:
+      - "5000:5000"  # Puerto donde se expondrá el servicio de Flask
+    environment:
+      - FLASK_APP=app.py  # Asegúrate de poner el nombre correcto de tu archivo principal en Flask
+      - FLASK_ENV=development
+      - MYSQL_HOST=db  # Aquí usamos 'db', que es el nombre del servicio de la base de datos
+      - MYSQL_DATABASE=pfddatabase
+      - MYSQL_USER=admin
+      - MYSQL_PASSWORD=123456
+    depends_on:
+      - db  # Asegura que el servicio de consultas depende de la base de datos
+
 volumes:
   mysql_data:

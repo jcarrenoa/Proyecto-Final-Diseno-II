@@ -4,9 +4,26 @@
 <div class="form-container">
     <h1 class="title_log">Logs</h1>
 
-    <!-- Barra de búsqueda -->
+    <!-- Formulario de búsqueda -->
     <form method="get" action="{% url 'log_list' %}" class="search-form">
-        <input type="text" name="q" class="search-input" placeholder="Buscar por documento" value="{{ request.GET.q }}">
+        <!-- Campo para buscar por documento -->
+        <input type="text" name="documento" class="search-input" placeholder="Buscar por documento" value="{{ request.GET.q }}">
+        
+        <!-- Campo para buscar por tipo -->
+        <select name="tipo" class="search-select">
+            <option value="">Todos los tipos</option>
+            {% for tipo in tipos %}
+                <option value="{{ tipo.0 }}" {% if request.GET.tipo == tipo.0 %}selected{% endif %}>{{ tipo.1 }}</option>
+            {% endfor %}
+        </select>
+
+        <!-- Campo para seleccionar fecha de inicio -->
+        <input type="date" name="fecha_inicio" class="date-input" value="{{ request.GET.fecha_inicio }}">
+
+        <!-- Campo para seleccionar fecha de fin -->
+        <input type="date" name="fecha_fin" class="date-input" value="{{ request.GET.fecha_fin }}">
+
+        <!-- Botón de búsqueda -->
         <button type="submit" class="search-button">Buscar</button>
     </form>
 

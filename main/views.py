@@ -1,12 +1,13 @@
 from django.shortcuts import render
 from auth_mysite.models import Persona
 from bot.bot import Bot
-from .forms import PersonaForm
+from .forms import PersonaForm, LogSearchForm
 from django.shortcuts import redirect
 from django.contrib.auth import logout
 from django.contrib.auth.decorators import login_required
 from .models import Log
 from django.views.generic import ListView
+import requests
 
 bot = Bot()
 
@@ -16,10 +17,12 @@ def main_view(request):
 
 @login_required
 def detalles_view(request, id):
-    persona = Persona.objects.get(id=id)
-    etimologia = bot.get_response(persona.primer_nombre)
-    registrar_log('CONSULTAR', persona.nro_documento)
-    return render(request, 'detalles.html', {'persona': persona, 'etimologia': etimologia})
+    response = requests.get(f'http://localhost:5000/persona/{id}')
+    if response.status_code == 200:
+        persona = response.json()
+        etimologia = bot.get_response(persona["primer_nombre"])
+        registrar_log('CONSULTAR', persona["nro_documento"])
+        return render(request, 'detalles.html', {**persona, 'etimologia': etimologia})
 
 @login_required
 def register(request):
@@ -44,15 +47,40 @@ def registrar_log(tipo, documento):
 
 class LogListView(ListView):
     model = Log
-    template_name = 'loglist.html'  # Ruta del template
-    context_object_name = 'logs'  # Nombre del objeto en el contexto
-    paginate_by = 10  # Número de logs por página
+    template_name = 'loglist.html'
+    context_object_name = 'logs'
+    paginate_by = 10
 
     def get_queryset(self):
-        # Recuperamos el queryset
         queryset = super().get_queryset()
-        query = self.request.GET.get('q')  # Capturar la búsqueda de la URL
-        if query:
-            # Filtramos los logs por el documento que contenga el término de búsqueda
-            queryset = queryset.filter(documento__icontains=query)
+        query_params = self.request.GET
+        form = LogSearchForm(query_params)
+        
+        if form.is_valid():
+            # Filtrar por documento
+            documento = form.cleaned_data.get('documento')
+            if documento:
+                queryset = queryset.filter(documento__icontains=documento)
+
+            # Filtrar por tipo
+            tipo = form.cleaned_data.get('tipo')
+            if tipo:
+                queryset = queryset.filter(tipo=tipo)
+
+            # Filtrar por rango de fechas
+            fecha_inicio = form.cleaned_data.get('fecha_inicio')
+            fecha_fin = form.cleaned_data.get('fecha_fin')
+            if fecha_inicio and fecha_fin:
+                queryset = queryset.filter(fecha__date__range=[fecha_inicio, fecha_fin])
+            elif fecha_inicio:
+                queryset = queryset.filter(fecha__date__gte=fecha_inicio)
+            elif fecha_fin:
+                queryset = queryset.filter(fecha__date__lte=fecha_fin)
+
         return queryset
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        # Pasamos TIPO_CHOICES al contexto para que el template lo reciba
+        context['tipos'] = Log.TIPO_TRANSACCION
+        return context
