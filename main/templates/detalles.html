@@ -14,10 +14,10 @@
         <div class="container">
             <!-- Título con el nombre de la persona -->
             <div class="title">
-                {% if persona.segundo_nombre %}
-                    <h2>{{ persona.primer_nombre }} {{ persona.segundo_nombre }} {{ persona.apellidos }}</h2>
+                {% if segundo_nombre %}
+                    <h2>{{ primer_nombre }} {{ segundo_nombre }} {{ apellidos }}</h2>
                 {% else %}
-                    <h2>{{ persona.primer_nombre }} {{ persona.apellidos }}</h2>
+                    <h2>{{ primer_nombre }} {{ apellidos }}</h2>
                 {% endif %}
             </div>
         
@@ -26,18 +26,18 @@
                 <!-- Columna izquierda: Detalles de la persona -->
                 <div class="left-column">
                     <div class="details">
-                        <p><strong>Tipo de Documento:</strong> {{ persona.tipo_documento }}</p>
-                        <p><strong>Documento:</strong> {{ persona.nro_documento }}</p>
-                        <p><strong>Fecha de Nacimiento:</strong> {{ persona.fecha_nacimiento }}</p>
-                        <p><strong>Genero:</strong> {{ persona.genero }}</p>
-                        <p><strong>Email:</strong> {{ persona.correo }}</p>
-                        <p><strong>Teléfono:</strong> {{ persona.celular }}</p>
+                        <p><strong>Tipo de Documento:</strong> {{ tipo_documento }}</p>
+                        <p><strong>Documento:</strong> {{ nro_documento }}</p>
+                        <p><strong>Fecha de Nacimiento:</strong> {{ fecha_nacimiento }}</p>
+                        <p><strong>Genero:</strong> {{ genero }}</p>
+                        <p><strong>Email:</strong> {{ correo }}</p>
+                        <p><strong>Teléfono:</strong> {{ celular }}</p>
                     </div>
                 </div>
         
                 <!-- Columna derecha: Foto de perfil -->
                 <div class="right-column">
-                    <img src="{{ persona.foto_identificacion.url }}" alt="Foto de perfil">
+                    <img src="/media/{{ foto_identificacion }}" alt="Foto de perfil">
                 </div>
             </div>
         

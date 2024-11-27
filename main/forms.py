@@ -1,6 +1,7 @@
 from django import forms
 from auth_mysite.models import Persona
 import re
+from .models import Log
 
 class PersonaForm(forms.ModelForm):
     class Meta:
@@ -57,3 +58,9 @@ class PersonaForm(forms.ModelForm):
             if foto.size > max_size_mb * 1024 * 1024:  # Convertir MB a bytes
                 raise forms.ValidationError(f'La foto no debe exceder {max_size_mb} MB.')
         return foto
+
+class LogSearchForm(forms.Form):
+    documento = forms.CharField(required=False, label="Documento")
+    tipo = forms.ChoiceField(choices=[('', 'Todos')] + Log.TIPO_TRANSACCION, required=False, label="Tipo de Acción")
+    fecha_inicio = forms.DateField(required=False, widget=forms.DateInput(attrs={'type': 'date'}), label="Fecha Inicio")
+    fecha_fin = forms.DateField(required=False, widget=forms.DateInput(attrs={'type': 'date'}), label="Fecha Fin")

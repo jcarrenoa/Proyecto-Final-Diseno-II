@@ -1,0 +1,20 @@
+# Usa una imagen base de Python
+FROM python:3.9-slim
+
+# Establece el directorio de trabajo
+WORKDIR /app
+
+# Copia el archivo de requisitos
+COPY requirements.txt /app/
+
+# Instala las dependencias
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Copia el código de la aplicación
+COPY . /app/
+
+# Expón el puerto donde tu servicio de Flask se ejecutará
+EXPOSE 5000
+
+# Define el comando para iniciar el servicio de Flask
+CMD ["flask", "run", "--host=0.0.0.0"]
