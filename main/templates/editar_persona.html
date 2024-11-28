@@ -1,0 +1,35 @@
+{% extends 'base_auth.html' %}
+
+{% block header_registro %}
+    <div class="nav-links">
+        <a href="{% url 'main_view' %}">Volver</a>
+        <a href="{% url 'exit' %}">Cerrar Sesión</a>
+    </div>
+{% endblock %}
+
+{% block content %}
+    <div class="form-container">
+        <h1 class="title">Modificar Datos Personales</h1>
+        
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            
+            <!-- Renderiza los campos del formulario automáticamente -->
+            {{ form.as_p }}
+
+            <!-- Muestra los errores del formulario (si los hay) -->
+            {% if form.errors %}
+                <div class="error-message">
+                    <ul>
+                        {% for field, errors in form.errors.items %}
+                            <li>{{ field }}: {{ errors }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            {% endif %}
+
+            <input type="submit" value="Modificar Datos" id="submit">
+        </form>
+    </div>
+{% endblock %}
+

@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from auth_mysite.models import Persona
 from bot.bot import Bot
 from .forms import PersonaForm, LogSearchForm
@@ -8,6 +8,8 @@ from django.contrib.auth.decorators import login_required
 from .models import Log
 from django.views.generic import ListView
 import requests
+#from .models import Persona
+#from .forms import PersonaForm
 
 bot = Bot()
 
@@ -44,6 +46,28 @@ def exit(request):
 def registrar_log(tipo, documento):
     """Función para registrar logs."""
     Log.objects.create(tipo=tipo, documento=documento)
+
+def editar_persona(request, persona_id):
+    persona = get_object_or_404(Persona, id=persona_id)
+
+    if request.method == 'POST':
+        form = PersonaForm(request.POST, request.FILES, instance=persona)
+        if form.is_valid():
+            form.save()
+            return redirect('main_view')
+    else:
+        form = PersonaForm(instance=persona)
+
+    return render(request, 'editar_persona.html', {'form': form})
+
+def eliminar_persona(request, persona_id):
+    persona = get_object_or_404(Persona, id=persona_id)
+
+    if request.method == 'POST':
+        persona.delete()
+        return redirect('main_view')
+
+    return render(request, 'editar_persona.html', {'persona': persona})
 
 class LogListView(ListView):
     model = Log
@@ -84,3 +108,4 @@ class LogListView(ListView):
         # Pasamos TIPO_CHOICES al contexto para que el template lo reciba
         context['tipos'] = Log.TIPO_TRANSACCION
         return context
+

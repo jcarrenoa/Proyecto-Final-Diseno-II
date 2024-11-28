@@ -6,6 +6,7 @@ from django.contrib.auth import authenticate, login as auth_login
 from django.contrib.auth import logout
 from django.contrib.auth.decorators import login_required
 
+
 def login(request):
     if request.method == 'POST':
         username = request.POST['username']
@@ -23,3 +24,4 @@ def login(request):
             messages.error(request, 'Usuario o contraseña incorrectos')
     
     return render(request, 'login.html')
+

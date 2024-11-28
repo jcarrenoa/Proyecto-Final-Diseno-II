@@ -25,5 +25,7 @@ urlpatterns = [
     path('', login_required(views.main_view), name='main_view'),
     path('detalles/<int:id>/', views.detalles_view, name='detalles'),
     path('exit/', views.exit, name='exit'),
-    path('logs/', login_required(LogListView.as_view()), name='log_list')
+    path('logs/', login_required(LogListView.as_view()), name='log_list'),
+    path('editar/<int:persona_id>/', views.editar_persona, name='editar_persona'),
+    path('eliminar/<int:persona_id>/', views.eliminar_persona, name='eliminar_persona')
 ]
