@@ -52,37 +52,5 @@
             {% endfor %}
         </tbody>
     </table>
-
-    <!-- Paginación -->
-    <nav class="pagination-nav" aria-label="Page navigation">
-        <ul>
-            {% if logs.has_previous %}
-                <li>
-                    <a href="?q={{ request.GET.q }}&page=1" class="pagination-link">Primera</a>
-                </li>
-                <li>
-                    <a href="?q={{ request.GET.q }}&page={{ logs.previous_page_number }}" class="pagination-link">Anterior</a>
-                </li>
-            {% endif %}
-            
-            <li>
-                <span class="pagination-text">Página {{ logs.number }} de {{ logs.paginator.num_pages }}</span>
-            </li>
-
-            {% if logs.has_next %}
-                <li>
-                    <a href="?q={{ request.GET.q }}&page={{ logs.next_page_number }}" class="pagination-link">Siguiente</a>
-                </li>
-                <li>
-                    <a href="?q={{ request.GET.q }}&page={{ logs.paginator.num_pages }}" class="pagination-link">Última</a>
-                </li>
-            {% endif %}
-        </ul>
-    </nav>
-    {% if logs %}
-        <p>Página actual: {{ logs.has_next }}</p>
-    {% else %}
-        <p>No hay logs disponibles.</p>
-    {% endif %}
 </div>
 {% endblock %}

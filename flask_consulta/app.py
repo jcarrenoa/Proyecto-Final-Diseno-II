@@ -1,19 +1,25 @@
 from flask import Flask, request, jsonify
 import sqlite3 
 import mysql.connector
+import pymysql
 
 app = Flask(__name__)
 
 # Conexión a la base de datos
 def get_db_connection():
-    return mysql.connector.connect(
-        host="db",
-        user="admin",
-        password="123456",
-        database="pfddatabase",
-        port=3306
-    )
-
+    try:
+        connection = mysql.connector.connect(
+            host="db",
+            user="admin",
+            password="123456",
+            database="pfddatabase",
+            port=3306
+        )
+        return connection
+    except mysql.connector.errors.DatabaseError as e:
+        print(f"Error de conexión: {e}")
+        return None
+    
 # Endpoint para obtener logs
 @app.route('/logs', methods=['GET'])
 def get_logs():
@@ -22,32 +28,42 @@ def get_logs():
     fecha_inicio = request.args.get('fecha_inicio')
     fecha_fin = request.args.get('fecha_fin')
 
-    connection = get_db_connection()
-    print(connection)
-    cursor = connection.cursor(dictionary=True)
+    try:
+        connection = get_db_connection()
+        cursor = connection.cursor(dictionary=True)
+        query = "SELECT * FROM main_log WHERE 1=1"
+        params = []
 
-    query = "SELECT * FROM main_log WHERE 1=1"
-    params = []
+        if tipo:
+            query += " AND tipo = %s"
+            params.append(tipo)
+        if documento:
+            query += " AND documento LIKE %s"
+            params.append(f"%{documento}%")
+        if fecha_inicio:
+            query += " AND DATE(fecha) >= %s"
+            params.append(fecha_inicio)
+        if fecha_fin:
+            query += " AND DATE(fecha) <= %s"
+            params.append(fecha_fin)
+        cursor.execute(query, params)
+        logs = cursor.fetchall()
 
-    if tipo:
-        query += " AND tipo = %s"
-        params.append(tipo)
-    if documento:
-        query += " AND documento LIKE %s"
-        params.append(f"%{documento}%")
-    if fecha_inicio:
-        query += " AND DATE(fecha) >= %s"
-        params.append(fecha_inicio)
-    if fecha_fin:
-        query += " AND DATE(fecha) <= %s"
-        params.append(fecha_fin)
+        cursor.close()
+        connection.close()
 
-    cursor.execute(query, params)
-    logs = cursor.fetchall()
-    cursor.close()
-    connection.close()
+        if not logs:
+            return jsonify([])
 
-    return jsonify(logs)
+        return jsonify(logs)
+
+    except pymysql.MySQLError as e:
+        print(f"Error al conectar o ejecutar la consulta: {e}")
+        return jsonify([])
+
+    except Exception as e:
+        print(f"Error inesperado: {e}")
+        return jsonify([])
 
 @app.route('/persona', defaults={'id': None}, methods=['GET'])
 @app.route('/persona/<int:id>', methods=['GET'])
