@@ -1,7 +1,6 @@
 from flask import Flask, request, jsonify
 import sqlite3 
 import mysql.connector
-import pymysql
 
 app = Flask(__name__)
 
@@ -57,7 +56,7 @@ def get_logs():
 
         return jsonify(logs)
 
-    except pymysql.MySQLError as e:
+    except e:
         print(f"Error al conectar o ejecutar la consulta: {e}")
         return jsonify([])
 
@@ -89,6 +88,33 @@ def get_persona(id):
             return jsonify(persona)
         else:
             return jsonify({'message': 'Persona no encontrada'}), 404
+        
+@app.route('/persona/<int:id>', methods=['DELETE'])
+def delete_persona(id):
+    connection = get_db_connection()
+    if connection is None:
+        return jsonify({"error": "No se pudo conectar a la base de datos"}), 500
+
+    cursor = connection.cursor()
+    
+    try:
+        print(f"Eliminando auth_mysite_persona con ID {id}")
+        query = "DELETE FROM persona WHERE id = %s"
+        cursor.execute(query, (id,))
+        connection.commit()
+
+        if cursor.rowcount > 0:
+            return jsonify({"message": f"Persona con ID {id} eliminada exitosamente."}), 200
+        else:
+            return jsonify({"message": f"No se encontró ninguna persona con ID {id}."}), 404
+
+    except mysql.connector.Error as e:
+        return jsonify({"error": "Error al eliminar la persona"}), 500
+
+    finally:
+        cursor.close()
+        connection.close()
+
 
 if __name__ == '__main__':
     app.run(debug=True)

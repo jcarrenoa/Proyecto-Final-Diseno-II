@@ -64,7 +64,9 @@ def register(request):
             form.save()  # Guarda el registro en la base de datos
             registrar_log('CREAR', form.cleaned_data['nro_documento'])
             form = PersonaForm()
-            return render(request, 'register.html', {'form': form})  # Redirige a una vista de lista o a otra página después de guardar
+            response = requests.get('http://localhost:5000/persona', timeout=3)
+            personas = response.json()
+            return render(request, 'main.html', {'personas': personas})  # Redirige a una vista de lista o a otra página después de guardar
     else:
         form = PersonaForm()
     return render(request, 'register.html', {'form': form})
@@ -85,13 +87,18 @@ def editar_persona(request, persona_id):
 
 @login_required
 def eliminar_persona(request, persona_id):
-    persona = get_object_or_404(Persona, id=persona_id)
-
-    if request.method == 'POST':
-        persona.delete()
-        return redirect('main_view')
-
-    return render(request, 'editar_persona.html', {'persona': persona})
+    response = requests.get(f'http://localhost:5000/persona/{persona_id}', timeout=3)
+    if response.status_code == 200:
+        try:
+            persona = response.json()
+            if request.method == 'POST':
+                response = requests.delete(f'http://localhost:5000/persona/{persona_id}', timeout=3)
+                registrar_log('ELIMINAR', persona["nro_documento"])
+                print(f"Codigo de eestado: {response.status_code}")
+                return redirect('main_view')
+            return render(request, 'editar_persona.html', {'persona': persona})
+        except ValueError:
+            return HttpResponse("Error: La respuesta no es un JSON válido.", status=500)
 
 def exit(request):
     logout(request)
