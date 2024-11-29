@@ -8,23 +8,53 @@ from django.contrib.auth.decorators import login_required
 from .models import Log
 from django.views.generic import ListView
 import requests
+from django.shortcuts import get_object_or_404
+from django.http import HttpResponse
 
 bot = Bot()
 
+@login_required
 def main_view(request):
-    response = requests.get(f'http://localhost:5000/persona')
-    if response.status_code == 200:
-        personas = response.json()
-        return render(request, 'main.html', {'personas': personas})
+    try:
+        response = requests.get('http://localhost:5000/persona', timeout=3)
+        if response.status_code == 200:
+            try:
+                personas = response.json() 
+            except ValueError:  
+                return HttpResponse("Error: La respuesta no es un JSON válido.", status=500)
+            return render(request, 'main.html', {'personas': personas})
+        else:
+            return HttpResponse(f"Error: El servicio respondió con el código {response.status_code}.", status=500)
+    except requests.exceptions.ConnectionError:
+        return HttpResponse("Error: No se pudo conectar con el servicio Flask.", status=500)
+    except requests.exceptions.Timeout:
+        return HttpResponse("Error: Tiempo de espera agotado al intentar conectar con el servicio.", status=500)
+    except Exception as e:
+        # Capturar cualquier otro error no anticipado
+        return HttpResponse(f"Error inesperado: {str(e)}", status=500)
 
 @login_required
 def detalles_view(request, id):
-    response = requests.get(f'http://localhost:5000/persona/{id}')
-    if response.status_code == 200:
-        persona = response.json()
-        etimologia = bot.get_response(persona["primer_nombre"])
-        registrar_log('CONSULTAR', persona["nro_documento"])
-        return render(request, 'detalles.html', {**persona, 'etimologia': etimologia})
+    try:
+        response = requests.get(f'http://localhost:5000/persona/{id}', timeout=3)
+        if response.status_code == 200:
+            try:
+                persona = response.json()
+            except ValueError:
+                return HttpResponse("Error: La respuesta no es un JSON válido.", status=500)
+            etimologia = bot.get_response(persona["primer_nombre"])
+            registrar_log('CONSULTAR', persona["nro_documento"])
+            return render(request, 'detalles.html', {**persona, 'etimologia': etimologia})
+        else:
+            return HttpResponse(f"Error: El servicio respondió con el código {response.status_code}.", status=500)
+    except requests.exceptions.ConnectionError:
+        return HttpResponse("Error: No se pudo conectar con el servicio Flask.", status=500)
+    
+    except requests.exceptions.Timeout:
+        return HttpResponse("Error: Tiempo de espera agotado al intentar conectar con el servicio.", status=500)
+    
+    except Exception as e:
+        return HttpResponse(f"Error inesperado: {str(e)}", status=500)
 
 @login_required
 def register(request):
@@ -39,6 +69,30 @@ def register(request):
         form = PersonaForm()
     return render(request, 'register.html', {'form': form})
 
+@login_required
+def editar_persona(request, persona_id):
+    persona = get_object_or_404(Persona, id=persona_id)
+
+    if request.method == 'POST':
+        form = PersonaForm(request.POST, request.FILES, instance=persona)
+        if form.is_valid():
+            form.save()
+            return redirect('main_view')
+    else:
+        form = PersonaForm(instance=persona)
+
+    return render(request, 'editar_persona.html', {'form': form})
+
+@login_required
+def eliminar_persona(request, persona_id):
+    persona = get_object_or_404(Persona, id=persona_id)
+
+    if request.method == 'POST':
+        persona.delete()
+        return redirect('main_view')
+
+    return render(request, 'editar_persona.html', {'persona': persona})
+
 def exit(request):
     logout(request)
     return redirect('/')
@@ -51,7 +105,6 @@ class LogListView(ListView):
     model = Log
     template_name = 'loglist.html'
     context_object_name = 'logs'
-    paginate_by = 10
 
     def get_queryset(self):
         queryset = super().get_queryset()

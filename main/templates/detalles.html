@@ -40,7 +40,12 @@
                     <img src="/media/{{ foto_identificacion }}" alt="Foto de perfil">
                 </div>
             </div>
-        
+            
+            <div class="nav-links">
+                <a href="{% url 'editar_persona' id %}">Modificar</a>
+                <a href="{% url 'eliminar_persona' id %}">Eliminar</a>
+            </div>
+
             <!-- Sección de etimología del nombre debajo de los detalles y la foto -->
             <div class="etymology">
                 <h4>Etimología del nombre</h4>
